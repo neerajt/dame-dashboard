@@ -41,8 +41,13 @@ void setup() {
 // List of patterns to cycle through.  Each is defined as a separate function below.
 uint8_t gHue = 150; // rotating "base color" used by many of the patterns
 
-float pos1_flt = 16;
-uint8_t pos1 = 16;
+uint8_t pos1 = 16; 
+uint8_t pos2 = 0;
+
+int moduloclock(int argi, int adj)
+{ argi += 1;
+  return(argi % 16 + adj); 
+}
 
 void loop()
 {
@@ -56,6 +61,8 @@ void loop()
 
   // do some periodic updates
   EVERY_N_MILLISECONDS( 200 ) { gHue += 10; } // slowly cycle the "base color" through the rainbow
+  EVERY_N_MILLISECONDS( 600 ) { pos1 = moduloclock(pos1, 16); }
+  EVERY_N_MILLISECONDS( 300 ) { pos2 = moduloclock(pos2, 0); }
   //EVERY_N_SECONDS( 10 ) { nextPattern(); } // change patterns periodically
 }
 
@@ -64,17 +71,7 @@ void loop()
 void sinelon(){
   // a colored dot sweeping back and forth, with fading trails
   fadeToBlackBy( leds,NUM_LEDS, 10);
-  if(pos1_flt > NUM_LEDS - 1.05)
-{
-   pos1_flt = 16;
-}
-else
-{
-  pos1_flt += 0.05;
-}
-  int pos1 = floor(pos1_flt + 0.5);
   
-  int pos2 = beatsin16(13,0,7);
   leds[pos1] += CHSV( gHue, 255, 192);
   leds[pos2] += CHSV( gHue, 255, 192);
 }
